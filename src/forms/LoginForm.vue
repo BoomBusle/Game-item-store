@@ -14,6 +14,9 @@
       <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
       <div v-if="successMessage" class="success-message">
         {{ successMessage }}
+
+
+        
       </div>
     </form>
     <p class="register-link" @click="goToRegistration">
