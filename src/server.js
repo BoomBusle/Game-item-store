@@ -2,6 +2,9 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const crypto = require('crypto');
 
 const app = express();
@@ -11,8 +14,10 @@ const conn = mysql.createConnection({
     database: "game_item_store",
     password: "" 
 });
+
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
@@ -21,6 +26,18 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, 'assets', 'image', 'game'));
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+
+const upload = multer({ storage });
 
 conn.connect(err => {
     if (err) {
@@ -119,35 +136,39 @@ app.get('/products/:id', (req, res) => {
     });
 });
 
-app.post('/add_product', (req, res) => {
-    const { game_id, name, description, body, photo, price, enable } = req.body;
+app.post('/add_product', upload.single('photo'), (req, res) => {
+    const { game_id, name, description, body, price, enable } = req.body;
+    const photo = req.file ? req.file.filename : ''; 
 
     const sql = 'INSERT INTO products (game_id, name, description, body, photo, price, enable) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    conn.query(sql, [game_id, name, description, body, photo, price, enable ], (err, result) => {
+    conn.query(sql, [game_id, name, description, body, photo, price, enable], (err, result) => {
         if (err) {
-            console.error('Error adding food:', err);
-            res.status(500).send('Error adding food');
+            console.error('Error adding product:', err);
+            res.status(500).send('Error adding product');
         } else {
-            console.log('Food added successfully:', result);
-            res.send('Food added successfully');
+            console.log('Product added successfully:', result);
+            res.send('Product added successfully');
         }
     });
 });
-app.put('/edit_product/:id', (req, res) => {
+
+app.put('/edit_product/:id', upload.single('photo'), (req, res) => {
     const productId = req.params.id;
-    const { game_id, name, description, body, photo, price, enable  } = req.body;
+    const { game_id, name, description, body, price, enable } = req.body;
+    const photo = req.file ? req.file.filename : '';
 
     const sql = 'UPDATE products SET game_id = ?, name = ?, description = ?, body = ?, photo = ?, price = ?, enable = ? WHERE id = ?';
     conn.query(sql, [game_id, name, description, body, photo, price, enable, productId], (err, result) => {
         if (err) {
-            console.error('Error updating food:', err);
-            res.status(500).send('Error updating food');
+            console.error('Error updating product:', err);
+            res.status(500).send('Error updating product');
         } else {
-            console.log('Food updated successfully:', result);
-            res.send('Food updated successfully');
+            console.log('Product updated successfully:', result);
+            res.send('Product updated successfully');
         }
     });
 });
+
 app.delete('/delete_product/:id', (req, res) => {
     const productId = req.params.id;
 
@@ -514,6 +535,7 @@ app.get('/check_product_availability/:productId', (req, res) => {
         }
     });
 });
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

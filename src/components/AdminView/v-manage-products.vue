@@ -1,17 +1,27 @@
 <template>
   <div class="manage-products">
-    <input type="text" v-model="newProductName" placeholder="Назва">
-    <input type="text" v-model="newProductPrice" placeholder="Ціна">
-    <input type="text" v-model="newProductDescription" placeholder="Опис">
+    <input type="text" v-model="newProductName" placeholder="Назва" />
+    <input type="text" v-model="newProductPrice" placeholder="Ціна" />
+    <input type="text" v-model="newProductDescription" placeholder="Опис" />
     <select v-model="newProductBody" class="category-select">
       <option disabled value="">Виберіть категорію</option>
-      <option v-for="category in categories" :key="category.id" :value="category.name">{{ category.name }}</option>
+      <option
+        v-for="category in categories"
+        :key="category.id"
+        :value="category.name"
+      >
+        {{ category.name }}
+      </option>
     </select>
-    <input type="text" v-model="newProductPhoto" placeholder="Фото">
-    <input type="text" v-model="newProductEnable" placeholder="Enable">
+    <input type="file" @change="onFileChange" placeholder="Фото" />
+    <input type="text" v-model="newProductEnable" placeholder="Enable" />
     <button class="addProductBtn" @click="addProduct">Додати товар</button>
     <ul class="product-list">
-      <li v-for="(product, index) in products" :key="product.id" class="product-item">
+      <li
+        v-for="(product, index) in products"
+        :key="product.id"
+        class="product-item"
+      >
         <div class="product-column">
           <span class="column-title">Назва: </span>
           <span class="column-content">{{ product.name }}</span>
@@ -30,15 +40,24 @@
         </div>
         <div class="product-column">
           <span class="column-title">Фото: </span>
-          <span class="column-content">{{ product.photo }}</span>
+          <span class="column-content"
+            ><img
+              class="product-img"
+              :src="require('@/assets/image/game/' + product.photo)"
+              alt="Product Image"
+          /></span>
         </div>
         <div class="product-column">
           <span class="column-title">Enable: </span>
           <span class="column-content">{{ product.enable }}</span>
         </div>
         <div class="product-actions">
-          <button class="editBtn" @click="editProduct(product)">Редагувати</button>
-          <button class="deleteBtn" @click="deleteProduct(product.id)">Видалити</button>
+          <button class="editBtn" @click="editProduct(product)">
+            Редагувати
+          </button>
+          <button class="deleteBtn" @click="deleteProduct(product.id)">
+            Видалити
+          </button>
         </div>
       </li>
     </ul>
@@ -47,7 +66,7 @@
 
 <script>
 export default {
-  props: ['products', 'categories'],        
+  props: ["products", "categories"],
   data() {
     return {
       newProductName: "",
@@ -56,53 +75,70 @@ export default {
       newProductBody: "",
       newProductPhoto: "",
       newProductEnable: "",
+      selectedFile: null
     };
   },
   methods: {
-    addProduct() {
-      if (this.newProductName.trim() !== '' && this.newProductPrice !== "" && this.newProductBody !== "") {
-        this.$emit('addProduct', {
-          name: this.newProductName,
-          price: this.newProductPrice,
-          description: this.newProductDescription,
-          body: this.newProductBody,
-          photo: this.newProductPhoto,
-          enable: this.newProductEnable,
-        });
+    onFileChange(e) {
+      this.selectedFile = e.target.files[0];
+    },
+    async addProduct() {
+      if (
+        this.newProductName.trim() !== "" &&
+        this.newProductPrice !== "" &&
+        this.newProductBody !== "" &&
+        this.selectedFile
+      ) {
+        const formData = new FormData();
+        formData.append("name", this.newProductName);
+        formData.append("price", this.newProductPrice);
+        formData.append("description", this.newProductDescription);
+        formData.append("body", this.newProductBody);
+        formData.append("photo", this.selectedFile);
+        formData.append("enable", this.newProductEnable);
+
+        await this.$emit("addProduct", formData);
         this.clearInputs();
       }
     },
-    editProduct(product) {
-      const newName = prompt('Введіть нову назву:', product.name);
-      const newPrice = prompt('Введіть нову ціну:', product.price);
-      const newDescription = prompt('Введіть новий опис:', product.description);
-      const newBody = prompt('Введіть нове тіло:', product.body);
-      const newPhoto = prompt('Введіть нове фото:', product.photo);
-      const newEnable = prompt('Введіть новий статус:', product.enable);
-      
-      if (newName !== null && newName.trim() !== '') {
-        product.name = newName.trim();
+
+    async editProduct(product) {
+      const formData = new FormData();
+      formData.append("id", product.id);
+      formData.append(
+        "name",
+        prompt("Введіть нову назву:", product.name) || product.name
+      );
+      formData.append(
+        "price",
+        prompt("Введіть нову ціну:", product.price) || product.price
+      );
+      formData.append(
+        "description",
+        prompt("Введіть новий опис:", product.description) ||
+          product.description
+      );
+      formData.append(
+        "body",
+        prompt("Введіть нове тіло:", product.body) || product.body
+      );
+      formData.append(
+        "enable",
+        prompt("Введіть новий статус:", product.enable) || product.enable
+      );
+
+      if (this.selectedFile) {
+        formData.append("photo", this.selectedFile);
+      } else {
+        formData.append("photo", product.photo);
       }
-      if (newPrice !== null) {
-        product.price = newPrice.trim();
-      }
-      if (newDescription !== null) {
-        product.description = newDescription.trim();
-      }
-      if (newBody !== null) {
-        product.body = newBody.trim();
-      }
-      if (newPhoto !== null) {
-        product.photo = newPhoto.trim();
-      }
-      if (newEnable !== null) {
-        product.enable = newEnable.trim();
-      }
-      this.$emit('editProduct', product);
+
+      await this.$emit("editProduct", formData);
     },
-    deleteProduct(productId) {
-      if (confirm('Ви впевнені, що хочете видалити цей товар?')) {
-        this.$emit('deleteProduct', productId);
+
+    async deleteProduct(productId) {
+      if (confirm("Ви впевнені, що хочете видалити цей товар?")) {
+        await this.$emit("deleteProduct", productId);
       }
     },
     clearInputs() {
@@ -112,10 +148,7 @@ export default {
       this.newProductBody = "";
       this.newProductPhoto = "";
       this.newProductEnable = "";
-    },
-    getCategoryName(categoryId) {
-      const category = this.categories.find(cat => cat.id === categoryId);
-      return category ? category.name : '';
+      this.selectedFile = null;
     }
   }
 };
@@ -186,42 +219,45 @@ export default {
 
 @media (max-width: 600px) {
   .product-item {
-  display: flex;
-  flex-wrap: wrap;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  padding: 10px;
-  background-color: #f9f9f9;
-}
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
 
-.product-column {
-  width: 100%;
-  margin-bottom: 10px;
-}
+  .product-column {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 
-.column-title {
-  font-weight: bold;
-}
+  .column-title {
+    font-weight: bold;
+  }
 
-.product-actions {
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-}
+  .product-actions {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
 
-.product-actions button {
-  margin-left: 5px;
-  padding: 10px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  color: #fff;
-  background-color: #007bff;
-}
+  .product-actions button {
+    margin-left: 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    color: #fff;
+    background-color: #007bff;
+  }
 
-.product-actions button:hover {
-  background-color: #0056b3;
+  .product-actions button:hover {
+    background-color: #0056b3;
+  }
 }
+.product-img {
+  width: 5vw;
 }
 </style>
