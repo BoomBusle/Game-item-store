@@ -9,6 +9,7 @@
           "
           alt="Фото товару"
         />
+        
       </div>
       <div class="info-wrapper">
         <p>Опис: {{ product.description }}</p>
