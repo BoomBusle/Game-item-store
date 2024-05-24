@@ -200,6 +200,11 @@ export default {
   .order-router {
     color: #000;
   }
+}a
+.main-nav{
+  a{
+    text-transform: uppercase;
+  }
 }
 .null-cart {
   font-weight: bold;
