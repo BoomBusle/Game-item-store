@@ -174,6 +174,8 @@ export default {
         product_name: this.product[0].name,
         product_user_info: userInfoString
       };
+      console.log("ПМІ");
+
       axios
         .post("http://localhost:3000/add_to_cart", cartItem)
         .then((response) => {
