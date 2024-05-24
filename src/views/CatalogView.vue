@@ -114,7 +114,9 @@ export default {
 
       if (this.selectedCategory !== "") {
         filteredProducts = filteredProducts.filter((product) =>
-          product.body.toLowerCase().includes(this.selectedCategory.toLowerCase())
+          product.body
+            .toLowerCase()
+            .includes(this.selectedCategory.toLowerCase())
         );
       }
 
@@ -172,8 +174,7 @@ export default {
     width: 10vw;
     @media (max-width: 768px) {
       width: 30vw;
-
-  }
+    }
   }
   .filter-button {
     background-color: transparent;
@@ -227,14 +228,15 @@ export default {
 }
 .v-card-wrapper {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: space-around;
   max-width: 75vw;
   width: 100%;
   gap: 5vw;
   @media (max-width: 768px) {
-justify-content: center;
+    justify-content: center;
   }
 }
 </style>

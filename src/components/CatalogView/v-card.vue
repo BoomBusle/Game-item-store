@@ -1,17 +1,15 @@
 <template>
-  <div @click="redirectToProductPage">
-    <div class="v-card">
-      <img
-        :src="require('@/assets/image/game/' + product.photo)"
-        alt="Product Photo"
-      />
-      <div class="card-content">
-        <h2>{{ product.name }}</h2>
-        <p>{{ product.price }} грн</p>
-        <button class="add-to-cart-button" @click.stop="addToCart">
-          В кошик
-        </button>
-      </div>
+  <div class="v-card" @click="redirectToProductPage">
+    <img
+      :src="require('@/assets/image/game/' + product.photo)"
+      alt="Product Photo"
+    />
+    <div class="card-content">
+      <h2>{{ product.name }}</h2>
+      <p>{{ product.price }} грн</p>
+      <button class="add-to-cart-button" @click.stop="addToCart">
+        В кошик
+      </button>
     </div>
   </div>
 </template>
@@ -29,7 +27,7 @@ export default {
   methods: {
     redirectToProductPage() {
       const productId = this.product.id;
-      this.$router.push({ name: 'product', params: { productId: productId } });
+      this.$router.push({ name: "product", params: { productId: productId } });
     },
     addToCart() {
       const user_id = this.$cookies.get("userToken");
@@ -45,7 +43,7 @@ export default {
         price: this.product.price,
         quantity: 1, //this.quantity
         image_path: this.product.photo,
-        product_name: this.product.name    
+        product_name: this.product.name
       };
       axios
         .post("http://localhost:3000/add_to_cart", cartItem)
@@ -58,25 +56,66 @@ export default {
         });
     },
     transliterate(text) {
-      const cyrillic = 'абвгдежзийклмнопрстуфхцчшщіьэюя';
+      const cyrillic = "абвгдежзийклмнопрстуфхцчшщіьэюя";
       const latin = [
-        'a','b','v','g','d','e','yo','zh','z','i','y','k','l','m',
-        'n','o','p','r','s','t','u','f','h','ts','ch','sh','shch',
-        '','y','','e','yu','ya'
+        "a",
+        "b",
+        "v",
+        "g",
+        "d",
+        "e",
+        "yo",
+        "zh",
+        "z",
+        "i",
+        "y",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "r",
+        "s",
+        "t",
+        "u",
+        "f",
+        "h",
+        "ts",
+        "ch",
+        "sh",
+        "shch",
+        "",
+        "y",
+        "",
+        "e",
+        "yu",
+        "ya"
       ];
-      return text.split('').map(char => {
-        const index = cyrillic.indexOf(char.toLowerCase());
-        if (index !== -1) {
-          return char === char.toUpperCase() ? latin[index].toUpperCase() : latin[index];
-        }
-        return char;
-      }).join('');
+      return text
+        .split("")
+        .map((char) => {
+          const index = cyrillic.indexOf(char.toLowerCase());
+          if (index !== -1) {
+            return char === char.toUpperCase()
+              ? latin[index].toUpperCase()
+              : latin[index];
+          }
+          return char;
+        })
+        .join("");
     }
   }
 };
 </script>
 
 <style scoped>
+@font-face {
+  font-family: "Speed Rush";
+  src: local('Speed Rush'),
+    url('../../assets/font/SpeedRush-JRKVB.ttf') format('ttf'),
+
+}
 .add-to-cart-button {
   background-color: #4caf50;
   color: white;
@@ -97,9 +136,8 @@ export default {
   border-radius: 0px 5px 5px 0px;
 }
 .v-card {
-  -webkit-box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.75);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -107,7 +145,20 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   cursor: pointer;
+  padding: 10px;
+  max-width: 22%;
   transition: background-color 0.3s;
+  font-family: "Speed Rush" !important;
+  &:hover {
+    background-color: #949494;
+  }
+  img {
+    filter: none;
+    max-width: 90%;
+    width: 200px;
+    height: auto;
+    border-radius: 10px 10px 0px 0px;
+  }
 }
 
 .v-card:hover {
@@ -118,16 +169,10 @@ export default {
   padding: 10px;
   font-weight: bold;
   text-align: center;
+  font-family: "Speed Rush" !important;
   p {
     margin: 10px;
   }
-}
-
-img {
-  filter: none;
-  width: 200px;
-  height: 160px;
-  border-radius: 10px 10px 0px 0px;
 }
 
 .modal {
@@ -189,15 +234,14 @@ img {
     flex-direction: column;
     width: 50%;
     select {
-  padding: 5px;
-  border-radius: 3px;
-  border: 1px solid #ccc;
-  &:focus {
-  outline: none;
-  border-color: #007bff;
-}
-}
-
+      padding: 5px;
+      border-radius: 3px;
+      border: 1px solid #ccc;
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+      }
+    }
   }
   .price-wrapper {
     display: flex;
