@@ -36,7 +36,6 @@ const storage = multer.diskStorage({
     }
 });
 
-
 const upload = multer({ storage });
 
 conn.connect(err => {
@@ -299,7 +298,7 @@ app.post('/register', (req, res) => {
             res.status(500).send('Error checking existing user');
         } else {
             if (rows.length > 0) {
-                res.status(400).send('Користувач з таким іменем, електронною поштою або номером телефону вже існує');
+                res.status(400).send('Користувач з таким іменем або електронною поштою вже існує');
             } else {
                 const sql = 'INSERT INTO users (login, email, password) VALUES (?, ?, ?)';
                 conn.query(sql, [username, email, password], (err, result) => {

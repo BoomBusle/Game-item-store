@@ -7,9 +7,10 @@
           type="text"
           id="username"
           v-model="username"
+          @input="validateUsername"
           required
-          pattern="\w{5,16}"
         />
+        <div v-if="usernameError" class="error-message">{{ usernameError }}</div>
       </div>
       <div class="form-group">
         <label for="email">Email:</label>
@@ -17,7 +18,10 @@
           type="email"
           id="email"
           v-model="email"
+          @input="validateEmail"
+          required
         />
+        <div v-if="emailError" class="error-message">{{ emailError }}</div>
       </div>
       <div class="form-group">
         <label for="password">Пароль:</label>
@@ -25,10 +29,10 @@
           type="password"
           id="password"
           v-model="password"
+          @input="validatePassword"
           required
-          minlength="4"
-          pattern="(?=.*[A-Z]).{7,}"
         />
+        <div v-if="passwordError" class="error-message">{{ passwordError }}</div>
       </div>
       <button type="submit" class="register-button">Зареєструватися</button>
       <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
@@ -45,14 +49,57 @@ export default {
     return {
       username: "",
       email: "",
-      phone: "",
       password: "",
+      usernameError: "",
+      emailError: "",
+      passwordError: "",
       errorMessage: "",
       successMessage: ""
     };
   },
   methods: {
+    validateUsername() {
+      const usernamePattern = /^\w{5,16}$/;
+      if (!this.username) {
+        this.usernameError = "Ім'я користувача обов'язкове";
+      } else if (!usernamePattern.test(this.username)) {
+        this.usernameError = "Ім'я користувача повинно містити від 5 до 16 символів";
+      } else {
+        this.usernameError = "";
+      }
+    },
+    validateEmail() {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!this.email) {
+        this.emailError = "Email обов'язковий";
+      } else if (!emailPattern.test(this.email)) {
+        this.emailError = "Некоректний формат email (example@mail.com)";
+      } else {
+        this.emailError = "";
+      }
+    },
+    validatePassword() {
+      const passwordPattern = /^(?=.*[A-Z]).{7,}$/;
+      if (!this.password) {
+        this.passwordError = "Пароль обов'язковий";
+      } else if (this.password.length < 7) {
+        this.passwordError = "Пароль повинен містити щонайменше 7 символи";
+      } else if (!passwordPattern.test(this.password)) {
+        this.passwordError = "Пароль повинен містити щонайменше одну велику літеру ";
+      } else {
+        this.passwordError = "";
+      }
+    },
     register() {
+      this.validateUsername();
+      this.validateEmail();
+      this.validatePassword();
+
+      if (this.usernameError || this.emailError || this.passwordError) {
+        this.errorMessage = "Будь ласка, виправте помилки у формі";
+        return;
+      }
+
       axios.post('http://localhost:3000/register', {
         username: this.username,
         email: this.email,
