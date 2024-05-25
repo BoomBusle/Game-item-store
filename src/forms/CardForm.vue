@@ -21,19 +21,19 @@
         <p>Створено: {{ new Date(product.created_at).toLocaleString() }}</p>
         <p>Оновлено: {{ new Date(product.updated_at).toLocaleString() }}</p>
         <div v-if="product.body === 'Прокачка'">
-          <div>
-            <label for="login">Логін:</label>
-            <input type="text" id="login" v-model="login" />
+          <div class="form-input">
+            <input type="text" id="login" v-model="login" placeholder="Логін" />
+            <label for="login">Логін</label>
           </div>
-          <div>
-            <label for="password">Пароль:</label>
-            <input type="password" id="password" v-model="password" />
+          <div class="form-input">
+            <input type="password" id="password" v-model="password" placeholder="Пароль" />
+            <label for="password">Пароль</label>
           </div>
         </div>
         <div v-else-if="product.body === 'Предмети'">
-          <div>
-            <label>Трейд силка:</label>
-            <input type="text" v-model="tradeLink" />
+          <div class="form-input">
+            <input type="text" v-model="tradeLink" placeholder="Трейд силка"/>
+            <label>Трейд силка</label>
           </div>
         </div>
         <button
@@ -301,6 +301,50 @@ export default {
 </script>
 
 <style lang="scss">
+.form-input {
+  position: relative;
+  width: 70%;
+}
+
+.form-input input::placeholder {
+  opacity: 0;
+}
+
+.form-input input {
+  width: 100%;
+  height: 4vh;
+  font-size: 1.2rem;
+  padding: 10px;
+  outline: none;
+  border: 1px solid gray;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
+.form-input label {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  color: gray;
+  letter-spacing: 1px;
+  transition: 0.3s;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+}
+
+.form-input input:focus + label,
+.form-input input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 0.8rem;
+  color: gray;
+  padding: 7px;
+}
+
+.form-input input:focus {
+  border: 2px solid #bebebe;
+}
 button {
   background-color: #fff;
   border: transparent;

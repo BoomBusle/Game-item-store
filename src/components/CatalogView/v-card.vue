@@ -7,8 +7,8 @@
     <div class="card-content">
       <h2>{{ product.name }}</h2>
       <p>{{ product.price }} грн</p>
-      <button class="add-to-cart-button" @click.stop="addToCart">
-        В кошик
+      <button class="add-to-cart-button" >
+        До товару
       </button>
     </div>
   </div>
