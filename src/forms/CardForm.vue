@@ -305,8 +305,7 @@ export default {
 </script>
 
 <style lang="scss">
-
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Jura:wght@300..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Jura:wght@300..700&display=swap");
 
 .form-input {
   position: relative;
@@ -403,8 +402,8 @@ button {
   flex-direction: column;
   max-width: 50vw;
   width: 100%;
-  gap:10px;
-  border-right: 1px solid rgba($color: #000000, $alpha: .2);
+  gap: 10px;
+  border-right: 1px solid rgba($color: #000000, $alpha: 0.2);
   h1 {
     text-transform: uppercase;
     font-weight: 800;
@@ -425,7 +424,7 @@ button {
   gap: 10px;
   width: -webkit-fill-available;
   padding: 20px;
-  p{
+  p {
     font-family: "Comfortaa", sans-serif;
   }
 }

@@ -2,9 +2,7 @@
   <div>
     <header class="v-header">
       <div>
-        <button class="menu-button" @click="toggleMenu">
-          ☰
-        </button>
+        <button class="menu-button" @click="toggleMenu">☰</button>
         <nav class="main-nav" v-if="!showMenu">
           <router-link to="/">На головну</router-link>
           <router-link to="/catalog">Каталог</router-link>
@@ -19,7 +17,9 @@
             cartItems.length
           }}</span>
           <div class="cart-overlay" v-if="showCart">
-            <h2 class="null-cart" v-if="cartItems.length == 0">Кошик порожній</h2>
+            <h2 class="null-cart" v-if="cartItems.length == 0">
+              Кошик порожній
+            </h2>
             <div class="cart-items">
               <div v-for="item in cartItems" :key="item.id" class="cart-item">
                 <img
@@ -34,7 +34,12 @@
                 </div>
               </div>
               <div class="create-order">
-                <router-link class="order-router" v-if="cartItems.length > 0" to="/order">Зробити замовлення</router-link>                
+                <router-link
+                  class="order-router"
+                  v-if="cartItems.length > 0"
+                  to="/order"
+                  >Зробити замовлення</router-link
+                >
               </div>
             </div>
           </div>
@@ -82,7 +87,7 @@ export default {
       username: "",
       showCart: false,
       cartItems: [],
-      showMenu: false 
+      showMenu: false
     };
   },
   methods: {
@@ -195,15 +200,20 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Jura:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 .create-order {
   padding: 10px;
   .order-router {
     color: #000;
   }
-}a
-.main-nav{
-  a{
+}
+.main-nav {
+  margin: 10px 0;
+  a {
     text-transform: uppercase;
+    font-family: "Raleway", sans-serif;
+
+    letter-spacing: 1.5px;
   }
 }
 .null-cart {
@@ -351,7 +361,7 @@ a {
   transition: max-height 2s ease-out;
 }
 .mobile-menu.open {
-  max-height: 500px; 
+  max-height: 500px;
 }
 @media (min-width: 768px) {
   .menu-button {

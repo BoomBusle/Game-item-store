@@ -158,6 +158,23 @@ export default {
   padding: 2vw;
   border-radius: 10px;
   gap: 10px;
+  * {
+    width: -webkit-fill-available;
+  }
+  input {
+    padding: 5px 7px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    &:focus {
+      border: none;
+    }
+    &:active {
+      border: 1px solid #ccc;
+    }
+    &:focus-visible {
+      border: none;
+    }
+  }
   .separator {
     width: 100%;
     height: 2px;
