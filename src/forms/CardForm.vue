@@ -2,14 +2,13 @@
   <div class="product-page" v-for="product in product">
     <div class="product-details" v-if="product">
       <div class="img-wrapper">
-        <h1>{{ product.name }}</h1>
         <img
           :src="
             product.photo ? require(`@/assets/image/game/${product.photo}`) : ''
           "
           alt="Фото товару"
         />
-        
+        <h1>{{ product.name }}</h1>
       </div>
       <div class="info-wrapper">
         <p>Опис: {{ product.description }}</p>
@@ -26,13 +25,18 @@
             <label for="login">Логін</label>
           </div>
           <div class="form-input">
-            <input type="password" id="password" v-model="password" placeholder="Пароль" />
+            <input
+              type="password"
+              id="password"
+              v-model="password"
+              placeholder="Пароль"
+            />
             <label for="password">Пароль</label>
           </div>
         </div>
         <div v-else-if="product.body === 'Предмети'">
           <div class="form-input">
-            <input type="text" v-model="tradeLink" placeholder="Трейд силка"/>
+            <input type="text" v-model="tradeLink" placeholder="Трейд силка" />
             <label>Трейд силка</label>
           </div>
         </div>
@@ -170,7 +174,7 @@ export default {
         user_id: user_id,
         product_id: this.$route.params.productId,
         price: this.product[0].price,
-        quantity: 1, 
+        quantity: 1,
         image_path: this.product[0].photo,
         product_name: this.product[0].name,
         product_user_info: userInfoString
@@ -301,6 +305,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Jura:wght@300..700&display=swap');
+
 .form-input {
   position: relative;
   width: 70%;
@@ -365,29 +372,49 @@ button {
   flex-direction: column;
 }
 .product-details {
-  padding: 20px;
-  background-color: #bebebe;
+  background: #fff;
+  min-height: 50vh;
+  // background-color: #bebebe;
+  font-family: "Jura", sans-serif;
   display: flex;
   align-items: center;
   justify-content: space-around;
   flex-direction: row;
+  max-width: 100vw;
   width: 90vw;
-  margin: 2vw;
-  border-radius: 10px;
-  -webkit-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  -moz-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px,
+    rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px,
+    rgba(0, 0, 0, 0.09) 0px 32px 16px;
+  // border-radius: 10px;
+  // -webkit-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
+  // -moz-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
+  // box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
 }
 .product-details img {
-  max-width: 50%;
-  height: auto;
+  max-height: 30vh;
+  width: auto;
+  filter: drop-shadow(0 0 0.75rem crimson);
 }
 .img-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 50vw;
+  max-width: 50vw;
+  width: 100%;
+  gap:10px;
+  border-right: 1px solid rgba($color: #000000, $alpha: .2);
+  h1 {
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-family: "Jura", sans-serif;
+    background: #000;
+    color: #fff;
+    padding: 10px;
+    border-radius: 20px;
+  }
 }
 .info-wrapper {
   display: flex;
@@ -396,7 +423,11 @@ button {
   flex-direction: column;
   font-weight: bold;
   gap: 10px;
-  width: 50vw;
+  width: -webkit-fill-available;
+  padding: 20px;
+  p{
+    font-family: "Comfortaa", sans-serif;
+  }
 }
 .review-section {
   background-color: #bebebe;
