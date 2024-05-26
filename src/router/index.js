@@ -32,6 +32,21 @@ const routes = [
     component: () => import("../views/ReviewView.vue")
   },
   {
+    path: "/about",
+    name: "about",
+    component: () => import("../views/AboutView.vue")
+  },
+  {
+    path: "/privacy_policy",
+    name: "privacy_policy",
+    component: () => import("../views/PrivacyPolicyView.vue")
+  },
+  {
+    path: "/FAQ",
+    name: "FAQ",
+    component: () => import("../views/FAQView.vue")
+  },
+  {
     path: "/products/:productId",
     name: "product",
     component: () => import("../forms/CardForm.vue")

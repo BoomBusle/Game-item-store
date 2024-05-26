@@ -7,8 +7,6 @@
           <router-link to="/about">Про нас</router-link>
           <router-link to="/privacy_policy">Політика конфіденційності</router-link>
           <router-link to="/reviews">Відгуки</router-link>
-          <router-link to="/actions">Акції</router-link>
-          <router-link to="/partners">Партнери</router-link>
           <router-link to="/FAQ">FAQ</router-link>
         </nav>
       </div>
@@ -132,7 +130,6 @@ footer {
     .category {
       order: 3;
     }
-
     nav {
       flex-direction: column;
       align-items: center;
