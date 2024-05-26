@@ -49,83 +49,85 @@
         </button>
       </div>
     </div>
-    <div v-if="isLoggedIn" class="review-section">
-      <h2>Залишити відгук</h2>
-      <textarea
-        v-model="reviewBody"
-        placeholder="Введіть ваш відгук"
-      ></textarea>
-      <h2 for="reviewBody">Оцінка:</h2>
-      <div class="rating">
-        <span
-          v-for="(n, index) in 5"
-          :key="n"
-          @click="rating = n"
-          :class="['filled', `star-${index}`, { dark: index >= rating - 1 }]"
-          @mouseover="highlightStars(index)"
-        >
-          &#9733;
-        </span>
+    <div class="reviews_wrapper">
+      <div v-if="isLoggedIn" class="review-section">
+        <h2>Залишити відгук</h2>
+        <textarea
+          v-model="reviewBody"
+          placeholder="Введіть ваш відгук"
+        ></textarea>
+        <h2 for="reviewBody">Оцінка:</h2>
+        <div class="rating">
+          <span
+            v-for="(n, index) in 5"
+            :key="n"
+            @click="rating = n"
+            :class="['filled', `star-${index}`, { dark: index >= rating - 1 }]"
+            @mouseover="highlightStars(index)"
+          >
+            &#9733;
+          </span>
+        </div>
+        <button @click="submitReview">Надіслати відгук</button>
       </div>
-      <button @click="submitReview">Надіслати відгук</button>
-    </div>
-    <div class="comments-section">
-      <h2>Коментарі</h2>
-      <div v-if="comments.length < 1">
-        <p>Поки що немає коментарів.</p>
-      </div>
-      <div class="comments-wrapper" v-else>
-        <div
-          class="comment"
-          v-for="(comment, index) in paginatedComments"
-          :key="comment.id"
-        >
-          <div class="main-comment-wrapper">
-            <template
-              v-if="
-                comment.user_id &&
-                users &&
-                users.find((user) => user.id === comment.user_id)
-              "
-            >
-              <p class="user-name">
-                {{ users.find((user) => user.id === comment.user_id).login }}
-              </p>
-            </template>
-            <p class="rating-wrapper">
-              Оцінка: {{ comment.body.split(" ")[0] }}
-              <span
-                class="ratingSee"
-                v-for="n in 1"
-                :key="n"
-                v-if="n <= parseInt(comment.body.split(' ')[0])"
-                >&#9733;</span
+      <div class="comments-section">
+        <h2>Коментарі</h2>
+        <div v-if="comments.length < 1">
+          <p>Поки що немає коментарів.</p>
+        </div>
+        <div class="comments-wrapper" v-else>
+          <div
+            class="comment"
+            v-for="(comment, index) in paginatedComments"
+            :key="comment.id"
+          >
+            <div class="main-comment-wrapper">
+              <template
+                v-if="
+                  comment.user_id &&
+                  users &&
+                  users.find((user) => user.id === comment.user_id)
+                "
               >
+                <p class="user-name">
+                  {{ users.find((user) => user.id === comment.user_id).login }}
+                </p>
+              </template>
+              <p class="rating-wrapper">
+                Оцінка: {{ comment.body.split(" ")[0] }}
+                <span
+                  class="ratingSee"
+                  v-for="n in 1"
+                  :key="n"
+                  v-if="n <= parseInt(comment.body.split(' ')[0])"
+                  >&#9733;</span
+                >
+              </p>
+            </div>
+            <p class="body-wrapper">
+              "{{ removeRatingFromComment(comment.body) }}"
+            </p>
+            <p class="time-wrapper">
+              Створено: {{ new Date(comment.created_at).toLocaleString() }}
             </p>
           </div>
-          <p class="body-wrapper">
-            {{ removeRatingFromComment(comment.body) }}
-          </p>
-          <p class="time-wrapper">
-            Створено: {{ new Date(comment.created_at).toLocaleString() }}
-          </p>
-        </div>
-        <div v-if="totalPages > 1">
-          <button
-            class="pageBtn"
-            @click="prevPage"
-            :disabled="currentPage === 1"
-          >
-            <span>&#8592;</span>
-          </button>
-          <span>Сторінка {{ currentPage }} з {{ totalPages }}</span>
-          <button
-            class="pageBtn"
-            @click="nextPage"
-            :disabled="currentPage === totalPages"
-          >
-            <span>&#8594;</span>
-          </button>
+          <div v-if="totalPages > 1">
+            <button
+              class="pageBtn"
+              @click="prevPage"
+              :disabled="currentPage === 1"
+            >
+              <span>&#8592;</span>
+            </button>
+            <span>Сторінка {{ currentPage }} з {{ totalPages }}</span>
+            <button
+              class="pageBtn"
+              @click="nextPage"
+              :disabled="currentPage === totalPages"
+            >
+              <span>&#8594;</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -371,6 +373,7 @@ button {
   flex-direction: column;
 }
 .product-details {
+  z-index: 100;
   background: #fff;
   min-height: 50vh;
   // background-color: #bebebe;
@@ -428,84 +431,102 @@ button {
     font-family: "Comfortaa", sans-serif;
   }
 }
-.review-section {
-  background-color: #bebebe;
+.reviews_wrapper {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 10px;
   flex-direction: column;
-  width: 80vw;
-  margin: 2vw;
-  border-radius: 10px;
-  gap: 5px;
-  -webkit-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  -moz-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  h2 {
-    font-weight: bold;
-  }
-}
-.comments-section {
-  margin: 2vw;
-  border-radius: 10px;
-  padding: 10px;
-  background-color: #bebebe;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 80vw;
-  -webkit-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  -moz-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-}
-
-.comment {
-  background-color: #fff;
-  width: 70vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin-bottom: 2vw;
-  border-radius: 10px;
-  -webkit-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  -moz-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  .main-comment-wrapper {
-    width: 100%;
-    display: flex;
+  background: #fff;
+  padding-top: 50px;
+  margin-top: -40px;
+  width: 100%;
+  max-width: 100vw;
+  z-index: 1;
+  gap: 15px;
+  border-radius: 20px 20px 0 0;
+  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
+    rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    justify-content: center;
     align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    flex-direction: row;
-    margin-left: 2vw;
-    margin-top: 1vw;
-    .rating-wrapper {
-      margin-top: -0.1vw;
+  .review-section {
+    // max-width: 50%;
+    width: -webkit-fill-available;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+    gap: 5px;
+    h2 {
+      font-weight: bold;
+    }
+    textarea {
+      min-width: 50vw;
+    }
+    .rating {
+      color: #e3a520;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    button {
+      padding: 7px;
+      cursor: pointer;
     }
   }
-  .body-wrapper {
+  .comments-section {
     display: flex;
+    width: -webkit-fill-available;
+    min-width: 50%;
+    max-width: 960px;
+    justify-content: center;
     align-items: center;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    width: 95%;
-    text-wrap: wrap;
-    text-align: justify;
-  }
-  .time-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-    width: 100%;
-    margin-right: 2vw;
+    flex-direction: column;
+
+    .comments-wrapper {
+      width: 100%;
+      .comment {
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-bottom: 2vw;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        .main-comment-wrapper {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          justify-content: flex-start;
+          gap: 10px;
+          .rating-wrapper {
+            margin-top: -0.1vw;
+          }
+        }
+        .body-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          flex-wrap: wrap;
+          width: 95%;
+          font-style: italic;
+          font-weight: 300;
+          text-wrap: wrap;
+          text-align: justify;
+        }
+        .time-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          width: 100%;
+          margin-right: 2vw;
+        }
+      }
+    }
   }
 }
+
 textarea {
-  width: 50vw;
   height: 100px;
   margin-bottom: 10px;
   resize: none;
@@ -519,12 +540,6 @@ textarea {
 .ratingSee {
   color: #ffd700;
   font-size: 24px;
-}
-
-.rating {
-  color: #e3a520;
-  font-size: 24px;
-  cursor: pointer;
 }
 
 .rating .filled {
