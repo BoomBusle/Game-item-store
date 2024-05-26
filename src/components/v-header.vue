@@ -249,7 +249,7 @@ export default {
     border-radius: 10px;
     background-color: #fff;
     border: 1px solid #ccc;
-    z-index: 100;
+    z-index: 101;
     display: none;
   }
   &:hover .cart-overlay {
