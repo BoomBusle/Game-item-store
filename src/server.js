@@ -153,20 +153,20 @@ app.post('/add_product', upload.single('photo'), (req, res) => {
 
 app.put('/edit_product/:id', upload.single('photo'), (req, res) => {
     const productId = req.params.id;
-    const { game_id, name, description, body, price, enable } = req.body;
-    const photo = req.file ? req.file.filename : '';
-
-    const sql = 'UPDATE products SET game_id = ?, name = ?, description = ?, body = ?, photo = ?, price = ?, enable = ? WHERE id = ?';
-    conn.query(sql, [game_id, name, description, body, photo, price, enable, productId], (err, result) => {
-        if (err) {
-            console.error('Error updating product:', err);
-            res.status(500).send('Error updating product');
-        } else {
-            console.log('Product updated successfully:', result);
-            res.send('Product updated successfully');
-        }
+    const { name, price, description, body, enable } = req.body;
+  
+    const sql = 'UPDATE products SET name = ?, price = ?, description = ?, body = ?, enable = ? WHERE id = ?';
+    conn.query(sql, [name, price, description, body, enable, productId], (err, result) => {
+      if (err) {
+        console.error('Error updating product:', err);
+        res.status(500).send('Error updating product');
+      } else {
+        console.log('Product updated successfully:', result);
+        res.send('Product updated successfully');
+      }
     });
-});
+  });
+
 
 app.delete('/delete_product/:id', (req, res) => {
     const productId = req.params.id;

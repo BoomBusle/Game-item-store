@@ -106,14 +106,15 @@ export default {
       }
     },
     async editProduct(product) {
-      try {
-        await axios.put(`http://localhost:3000/edit_product/${product.id}`, product);
-        console.log('Product updated successfully');
-        this.fetchProducts();
-      } catch (error) {
-        console.error('Error updating product:', error);
-      }
-    },
+  try {
+    await axios.put(`http://localhost:3000/edit_product/${product.id}`, product);
+    console.log('Product updated successfully');
+    this.fetchProducts();
+  } catch (error) {
+    console.error('Error updating product:', error);
+  }
+},
+
     async deleteProduct(productId) {
       try {
         await axios.delete(`http://localhost:3000/delete_product/${productId}`);

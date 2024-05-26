@@ -52,7 +52,7 @@
           <span class="column-content">{{ product.enable }}</span>
         </div>
         <div class="product-actions">
-          <button class="editBtn" @click="editProduct(product)">
+          <button class="editBtn" @click="openEditProductModal(product)">
             Редагувати
           </button>
           <button class="deleteBtn" @click="deleteProduct(product.id)">
@@ -61,6 +61,32 @@
         </div>
       </li>
     </ul>
+
+    <div v-if="showEditModal" class="modal-overlay" @click="closeEditProductModal">
+      <div class="edit-modal" @click.stop>
+        <h2>Редагувати продукт</h2>
+        <input type="text" v-model="editProductName" placeholder="Назва" />
+        <input type="text" v-model="editProductPrice" placeholder="Ціна" />
+        <input type="text" v-model="editProductDescription" placeholder="Опис" />
+        <select v-model="editProductBody" class="category-select">
+          <option disabled value="">Виберіть категорію</option>
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.name"
+          >
+            {{ category.name }}
+          </option>
+        </select>
+        <input type="text" v-model="editProductEnable" placeholder="Enable" />
+        <button class="saveProductBtn" @click="saveEditedProduct">
+          Зберегти зміни
+        </button>
+        <button class="cancelBtn" @click="closeEditProductModal">
+          Скасувати
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -75,7 +101,15 @@ export default {
       newProductBody: "",
       newProductPhoto: "",
       newProductEnable: "",
-      selectedFile: null
+      selectedFile: null,
+      showEditModal: false,
+      editProductId: null,
+      editProductName: "",
+      editProductPrice: "",
+      editProductDescription: "",
+      editProductBody: "",
+      editProductEnable: "",
+      editProductPhoto: ""
     };
   },
   methods: {
@@ -101,41 +135,44 @@ export default {
         this.clearInputs();
       }
     },
-
-    async editProduct(product) {
-      const formData = new FormData();
-      formData.append("id", product.id);
-      formData.append(
-        "name",
-        prompt("Введіть нову назву:", product.name) || product.name
-      );
-      formData.append(
-        "price",
-        prompt("Введіть нову ціну:", product.price) || product.price
-      );
-      formData.append(
-        "description",
-        prompt("Введіть новий опис:", product.description) ||
-          product.description
-      );
-      formData.append(
-        "body",
-        prompt("Введіть нове тіло:", product.body) || product.body
-      );
-      formData.append(
-        "enable",
-        prompt("Введіть новий статус:", product.enable) || product.enable
-      );
-
-      if (this.selectedFile) {
-        formData.append("photo", this.selectedFile);
-      } else {
-        formData.append("photo", product.photo);
-      }
-
-      await this.$emit("editProduct", formData);
+    openEditProductModal(product) {
+      this.showEditModal = true;
+      this.editProductId = product.id;
+      this.editProductName = product.name;
+      this.editProductPrice = product.price;
+      this.editProductDescription = product.description;
+      this.editProductBody = product.body;
+      this.editProductEnable = product.enable;
+      this.editProductPhoto = product.photo;
     },
+    async saveEditedProduct() {
+  const product = {
+    id: this.editProductId,
+    name: this.editProductName,
+    price: this.editProductPrice,
+    description: this.editProductDescription,
+    body: this.editProductBody,
+    enable: this.editProductEnable,
+  };
 
+  await this.$emit("editProduct", product);
+  this.closeEditProductModal();
+},
+
+
+
+
+    closeEditProductModal() {
+      this.showEditModal = false;
+      this.editProductId = null;
+      this.editProductName = "";
+      this.editProductPrice = "";
+      this.editProductDescription = "";
+      this.editProductBody = "";
+      this.editProductEnable = "";
+      this.editProductPhoto = "";
+      this.selectedFile = null;
+    },
     async deleteProduct(productId) {
       if (confirm("Ви впевнені, що хочете видалити цей товар?")) {
         await this.$emit("deleteProduct", productId);
@@ -259,5 +296,42 @@ export default {
 }
 .product-img {
   width: 5vw;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.edit-modal {
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  position: relative;
+}
+
+.saveProductBtn,
+.cancelBtn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #fff;
+  background-color: #007bff;
+  margin: 5px;
+}
+
+.saveProductBtn:hover,
+.cancelBtn:hover {
+  background-color: #0056b3;
 }
 </style>
