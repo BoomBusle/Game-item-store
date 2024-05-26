@@ -180,9 +180,8 @@ export default {
     height: 2px;
     background-color: gray;
   }
-  -webkit-box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.75);
-  box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.75);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   label {
     font-weight: bold;
     margin-right: 7vw;
