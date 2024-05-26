@@ -12,6 +12,7 @@
       </div>
       <div class="info-wrapper">
         <p>Опис: {{ product.description }}</p>
+        <p>Оцінка {{ averageRating }}</p>
         <p>Ціна: {{ product.price }} грн</p>
         <p>
           Доступність:
@@ -150,7 +151,8 @@ export default {
       login: "",
       password: "",
       tradeLink: "",
-      itemsPerPage: 5
+      itemsPerPage: 5,
+      averageRating: 0
     };
   },
   created() {
@@ -181,7 +183,6 @@ export default {
         product_name: this.product[0].name,
         product_user_info: userInfoString
       };
-      console.log("ПМІ");
 
       axios
         .post("http://localhost:3000/add_to_cart", cartItem)
@@ -284,6 +285,18 @@ export default {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
       }
+    },
+    calculateAverageRating() {
+      if (this.comments.length === 0) {
+        this.averageRating = 0;
+        return;
+      }
+
+      const totalRating = this.comments.reduce((acc, comment) => {
+        return acc + parseInt(comment.body.split(" ")[0]);
+      }, 0);
+
+      this.averageRating = totalRating / this.comments.length;
     }
   },
   computed: {
@@ -301,6 +314,14 @@ export default {
     },
     totalPages() {
       return Math.ceil(this.comments.length / this.itemsPerPage);
+    }
+  },
+  watch: {
+    comments: {
+      handler() {
+        this.calculateAverageRating();
+      },
+      deep: true
     }
   }
 };
@@ -396,7 +417,7 @@ button {
 .product-details img {
   max-height: 30vh;
   width: auto;
-  filter: drop-shadow(0 0 0.75rem crimson);
+  filter: drop-shadow(0 0 0.75rem);
 }
 .img-wrapper {
   display: flex;

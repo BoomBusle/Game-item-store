@@ -1,16 +1,27 @@
 <template>
   <div class="review-page">
     <div class="header">
-      <img src="../assets/image/fullLogo.png" alt="Логотип сайту" class="logo" />
+      <img
+        src="../assets/image/fullLogo.png"
+        alt="Логотип сайту"
+        class="logo"
+      />
       <div class="average-rating">
-        Середня оцінка: {{ averageRating.toFixed(1) }} &#9733;
+        <h2>Середня оцінка</h2>
+        <div>
+          <p>{{ averageRating.toFixed(1) }}</p>
+          <span class="star"> &#9733;</span>
+        </div>
       </div>
     </div>
     <h1>Відгуки</h1>
     <div class="review-section">
       <h2>Залишити відгук</h2>
       <div v-if="isLoggedIn">
-        <textarea v-model="reviewBody" placeholder="Введіть ваш відгук"></textarea>
+        <textarea
+          v-model="reviewBody"
+          placeholder="Введіть ваш відгук"
+        ></textarea>
         <h2>Оцінка:</h2>
         <div class="rating">
           <span
@@ -22,7 +33,7 @@
             &#9733;
           </span>
         </div>
-        <button @click="submitReview">Надіслати відгук</button>
+        <button class="submit-button" @click="submitReview">Надіслати відгук</button>
       </div>
       <div v-else>
         <p>Щоб написати відгук, зареєструйтесь будь ласка.</p>
@@ -55,7 +66,7 @@
             </p>
           </div>
           <p class="body-wrapper">
-            {{ removeRatingFromComment(comment.body) }}
+            "{{ removeRatingFromComment(comment.body) }}"
           </p>
           <p class="time-wrapper">
             Створено: {{ new Date(comment.created_at).toLocaleString() }}
@@ -75,7 +86,6 @@
   </div>
 </template>
 
-
 <script>
 import axios from "axios";
 import VueCookies from "vue-cookies";
@@ -88,7 +98,7 @@ export default {
       rating: 1,
       users: [],
       currentPage: 1,
-      itemsPerPage: 5,
+      itemsPerPage: 5
     };
   },
   created() {
@@ -130,7 +140,7 @@ export default {
       const reviewData = {
         body: reviewText,
         user_id: VueCookies.get("userToken"),
-        parent_id: 29102005,
+        parent_id: 29102005
       };
 
       axios
@@ -160,7 +170,7 @@ export default {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
       }
-    },
+    }
   },
   computed: {
     isLoggedIn() {
@@ -187,19 +197,48 @@ export default {
         return sum + rating;
       }, 0);
       const average = totalRating / this.comments.length;
-      return Math.round(average * 10) / 10; 
-    },
-  },
+      return Math.round(average * 10) / 10;
+    }
+  }
 };
 </script>
 
+<style lang="scss" scoped>
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  .logo {
+    width: 60%;
+  }
+  .average-rating {
+    font-size: 30px;
+    font-weight: bold;
+    width: 40%;
+    div {
+      font-size: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      .star {
+        color: #ffd700;
+      }
+    }
+  }
+  @media (max-width: 750px) {
+    flex-direction: column;
+  }
+}
 
-<style scoped>
 .review-page {
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
+  background-color: #fff;
   font-family: Arial, sans-serif;
+  width: 100vw;
 }
 
 .review-section,
@@ -240,6 +279,24 @@ textarea {
 
 .rating .star.filled {
   color: #ffd700;
+}
+
+.submit-button {
+  background-color: #c4c4c4;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+  &:hover {
+  background-color: #afafaf;
+  }
+  &:active{
+    background-color: #6e6e6e;
+  }
 }
 
 .comment {

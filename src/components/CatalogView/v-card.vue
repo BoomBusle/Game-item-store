@@ -5,7 +5,17 @@
       alt="Product Photo"
     />
     <div class="card-content">
-      <h2>{{ product.name }}</h2>
+      <h2 class="card-name">{{ product.name }}</h2>
+      <div v-if="averageRating === 0" class="rating">
+        <h2>Оцінок немає</h2>
+      </div>
+      <div v-else class="rating">
+        <h2 class="card-rating">{{ averageRating }}/5</h2>
+        <span class="star">&#9733</span>
+      </div>
+      <h2 class="card-body">Тип : {{ product.body }}</h2>
+    </div>
+    <div class="card-footer">
       <p>{{ product.price }} грн</p>
       <button class="add-to-cart-button" >
         До товару
@@ -24,7 +34,39 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      comments: [],
+      averageRating: 0
+    };
+  },
+  created() {
+    this.fetchComments();
+  },
   methods: {
+    calculateAverageRating() {
+      if (this.comments.length === 0) {
+        this.averageRating = 0;
+        return;
+      }
+
+      const totalRating = this.comments.reduce((acc, comment) => {
+        return acc + parseInt(comment.body.split(" ")[0]);
+      }, 0);
+
+      this.averageRating = totalRating / this.comments.length;
+    },
+    fetchComments() {
+      const productId = this.product.id;
+      axios
+        .get(`http://localhost:3000/comments/${productId}`)
+        .then((response) => {
+          this.comments = response.data;
+        })
+        .catch((error) => {
+          console.error("Помилка отримання коментарів:", error);
+        });
+    },
     redirectToProductPage() {
       const productId = this.product.id;
       this.$router.push({ name: "product", params: { productId: productId } });
@@ -105,11 +147,19 @@ export default {
         })
         .join("");
     }
+  },
+  watch: {
+    comments: {
+      handler() {
+        this.calculateAverageRating();
+      },
+      deep: true
+    }
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @font-face {
   font-family: "Speed Rush";
   src: local('Speed Rush'),
@@ -121,7 +171,8 @@ export default {
   color: white;
   padding: 9px 9px;
   border: none;
-  border-radius: 5px;
+  width: 50%;
+  border-radius: 10px 0px 10px 0px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -145,125 +196,64 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   cursor: pointer;
-  padding: 10px;
   max-width: 22%;
   transition: background-color 0.3s;
   font-family: "Speed Rush" !important;
+  transition: transform 0.3s;
+  overflow: hidden;
   &:hover {
-    background-color: #949494;
+    transform: translateY(-10px);
   }
   img {
-    filter: none;
-    max-width: 90%;
+    padding: 10px;
+    background-color: #d6d6d6;
     width: 200px;
-    height: auto;
-    border-radius: 10px 10px 0px 0px;
+    height: 200px; 
+    object-fit: fill; 
   }
-}
-
-.v-card:hover {
-  background-color: #949494;
-}
-
-.card-content {
-  padding: 10px;
-  font-weight: bold;
-  text-align: center;
-  font-family: "Speed Rush" !important;
-  p {
-    margin: 10px;
-  }
-}
-
-.modal {
-  display: flex;
-  position: fixed;
-  flex-direction: row;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
-}
-
-.modal img {
-  filter: none;
-  width: 500px;
-  height: 470px;
-  border-radius: 10px 0px 0px 10px;
-}
-
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  background-color: #fefefe;
-  border: 1px solid #888;
-  border-radius: 0px 10px 10px 0px;
-  width: 50%;
-  height: 50%;
-  overflow: auto;
-  .name-wrapper {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 1vw 1vw 0vw 1vw;
-    height: 10%;
-  }
-  .descr-wrapper {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 1vw 1vw 0vw 1vw;
-    height: 60%;
-  }
-  .bot-wrapper {
+  .card-footer{
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1vw;
-    height: 30%;
-  }
-  .charct-wrapper {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    flex-direction: column;
-    width: 50%;
-    select {
-      padding: 5px;
-      border-radius: 3px;
-      border: 1px solid #ccc;
-      &:focus {
-        outline: none;
-        border-color: #007bff;
-      }
+    
+    p{
+      font-weight: bold;
+      width: 50%;
     }
   }
-  .price-wrapper {
+}
+
+.card-content {
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  text-align: center;
+  font-family: "Speed Rush" !important;
+  .card-name{
+    font-weight: bold;
+  }
+  .card-body{
+    font-weight: 400;
+  }
+  .rating{
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    width: 50%;
+    .star{
+      padding-left: 0.2vw;
+      font-size: 20px;
+      color: #ffd700;
+    }
+  }
+  h2 {
+    padding-left: 1vw;
   }
 }
-.close-button {
-  color: #fff;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 28px;
-  font-weight: bold;
-}
 
-.close-button:hover,
-.close-button:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
+
 </style>
