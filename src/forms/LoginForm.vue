@@ -12,12 +12,7 @@
       </div>
       <button type="submit" class="login-button">Увійти</button>
       <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-      <div v-if="successMessage" class="success-message">
-        {{ successMessage }}
-
-
-        
-      </div>
+      <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
     </form>
     <p class="register-link" @click="goToRegistration">
       Ще не зареєстровані? Зареєструватися
@@ -29,12 +24,12 @@
 
 <script>
 import axios from "axios";
+import sha256 from "crypto-js/sha256";
 import { decodeCredential } from "vue3-google-login";
 
 export default {
   data() {
     return {
-      id: "",
       username: "",
       password: "",
       isVisible: true,
@@ -50,10 +45,11 @@ export default {
   methods: {
     loginForGoogle(){
       const googleUserData = this.userDataFromGoogleLogin;
+      const hashedPassword = sha256(googleUserData.sub).toString();
       axios
         .post("http://localhost:3000/login", {
           username: googleUserData.name,
-          password: googleUserData.sub
+          password: hashedPassword
         })
         .then((response) => {
           if (response && response.data) {
@@ -62,11 +58,10 @@ export default {
             }  else {
               const userId = response.data.id;
               this.$cookies.set("userToken", userId);
-              console.log(userId);
               this.$cookies.set("username", googleUserData.name);
+              this.$cookies.set("password", hashedPassword);
               this.$emit("close");
               this.isVisible = false;
-              
             }
           } else {
             console.error("Сервер не повернув відповідь або дані.");
@@ -77,6 +72,7 @@ export default {
           if (error.response && error.response.data) {
             if (error.response.data.error === "user_not_found") {
               this.errorMessage = "Такого користувача не існує";
+              this.register();
             } else if (error.response.data.error === "incorrect_password") {
               this.errorMessage = "Невірий пароль";
             } else {
@@ -89,19 +85,20 @@ export default {
     },
     register() {
       const googleUserData = this.userDataFromGoogleLogin;
+      const hashedPassword = sha256(googleUserData.sub).toString();
       axios
         .post("http://localhost:3000/register", {
           username: googleUserData.name,
           email: googleUserData.email,
-          password: googleUserData.sub
+          password: hashedPassword
         })
         .then((response) => {
           console.log("Відповідь сервера:", response.data);
+          this.loginForGoogle();
           if (response.data.error) {
             this.errorMessage = response.data.error;
           } else {
             this.username = "";
-            this.email = "";
             this.password = "";
             this.successMessage = response.data.message;
             this.errorMessage = "";
@@ -113,10 +110,11 @@ export default {
         });
     },
     login() {
+      const hashedPassword = sha256(this.password).toString();
       axios
         .post("http://localhost:3000/login", {
           username: this.username,
-          password: this.password
+          password: hashedPassword
         })
         .then((response) => {
           if (response && response.data) {
@@ -128,6 +126,7 @@ export default {
               const userId = response.data.id;
               this.$cookies.set("userToken", userId);
               this.$cookies.set("username", this.username);
+              this.$cookies.set("password", hashedPassword);
               this.$emit("close");
               this.isVisible = false;
             }
@@ -141,7 +140,7 @@ export default {
             if (error.response.data.error === "user_not_found") {
               this.errorMessage = "Такого користувача не існує";
             } else if (error.response.data.error === "incorrect_password") {
-              this.errorMessage = "Невірий пароль";
+              this.errorMessage = "Невірний пароль";
             } else {
               this.errorMessage = "Сталася помилка під час авторизації";
             }
@@ -150,7 +149,6 @@ export default {
           }
         });
     },
-
     closeForm() {
       this.$emit("close");
       this.isVisible = false;

@@ -128,6 +128,7 @@ export default {
     logout() {
       this.$cookies.remove("userToken");
       this.$cookies.remove("username");
+      this.$cookies.remove("password");
       this.isLoggedIn = false;
       this.username = "";
       this.$router.push("/");

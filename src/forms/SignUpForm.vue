@@ -43,6 +43,7 @@
 
 <script>
 import axios from 'axios';
+import sha256 from 'crypto-js/sha256';
 
 export default {
   data() {
@@ -83,7 +84,7 @@ export default {
       if (!this.password) {
         this.passwordError = "Пароль обов'язковий";
       } else if (this.password.length < 7) {
-        this.passwordError = "Пароль повинен містити щонайменше 7 символи";
+        this.passwordError = "Пароль повинен містити щонайменше 7 символів";
       } else if (!passwordPattern.test(this.password)) {
         this.passwordError = "Пароль повинен містити щонайменше одну велику літеру ";
       } else {
@@ -100,10 +101,11 @@ export default {
         return;
       }
 
+      const hashedPassword = sha256(this.password).toString(); 
       axios.post('http://localhost:3000/register', {
         username: this.username,
         email: this.email,
-        password: this.password
+        password: hashedPassword
       })
       .then(response => {
         console.log('Відповідь сервера:', response.data);
@@ -114,7 +116,7 @@ export default {
           this.email = "";
           this.password = "";
           this.successMessage = response.data.message;
-          this.errorMessage = ""; 
+          this.errorMessage = "";
           this.$router.push('/');
         }
       })
