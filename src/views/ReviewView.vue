@@ -1,44 +1,284 @@
 <template>
-    <div class="about-us">
-      <h1 class="title">Про нас</h1>
-      <p>
-        Магазин <span style="color: #00b500">Game Treasure</span> - це молода
-        компанія, яка спеціалізується на продажу ігрових цінностей. Наш магазин
-        пропонує широкий асортимент ігрових товарів для всіх типів гравців.
-      </p>
-      <p>
-        Ми прагнемо створити унікальне досвід для наших клієнтів, надаючи якісні
-        продукти та найкращий сервіс.
-      </p>
-      <p>Завітайте до нас і відкрийте для себе світ ігрових цінностей!</p>
-      <img src="../assets/image/fullLogo.png" alt="Game Treasure Лого" />
+  <div class="review-page">
+    <div class="header">
+      <img src="../assets/image/fullLogo.png" alt="Логотип сайту" class="logo" />
+      <div class="average-rating">
+        Середня оцінка: {{ averageRating.toFixed(1) }} &#9733;
+      </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: "About"
-  };
-  </script>
-  
-  <style lang="scss" scoped>
-  .about-us {
-    flex-direction: column;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #000;
-    p {
-      font-size: 30px;
-    }
-    img {
-      width: 40vw;
-    }
-  }
-  
-  .title {
-    font-size: 60px;
-    font-weight: bold;
-  }
-  </style>
-  
+    <h1>Відгуки</h1>
+    <div class="review-section">
+      <h2>Залишити відгук</h2>
+      <div v-if="isLoggedIn">
+        <textarea v-model="reviewBody" placeholder="Введіть ваш відгук"></textarea>
+        <h2>Оцінка:</h2>
+        <div class="rating">
+          <span
+            v-for="(n, index) in 5"
+            :key="n"
+            @click="rating = n"
+            :class="['star', { filled: index < rating }]"
+          >
+            &#9733;
+          </span>
+        </div>
+        <button @click="submitReview">Надіслати відгук</button>
+      </div>
+      <div v-else>
+        <p>Щоб написати відгук, зареєструйтесь будь ласка.</p>
+      </div>
+    </div>
+    <div class="comments-section">
+      <h2>Коментарі</h2>
+      <div v-if="comments.length < 1">
+        <p>Поки що немає коментарів.</p>
+      </div>
+      <div class="comments-wrapper" v-else>
+        <div
+          class="comment"
+          v-for="(comment, index) in paginatedComments"
+          :key="comment.id"
+        >
+          <div class="main-comment-wrapper">
+            <p class="user-name">
+              {{ getUsername(comment.user_id) }}
+            </p>
+            <p class="rating-wrapper">
+              Оцінка: {{ comment.body.split(" ")[0] }}
+              <span
+                class="ratingSee"
+                v-for="n in parseInt(comment.body.split(' ')[0])"
+                :key="n"
+              >
+                &#9733;
+              </span>
+            </p>
+          </div>
+          <p class="body-wrapper">
+            {{ removeRatingFromComment(comment.body) }}
+          </p>
+          <p class="time-wrapper">
+            Створено: {{ new Date(comment.created_at).toLocaleString() }}
+          </p>
+        </div>
+        <div v-if="totalPages > 1" class="pagination">
+          <button @click="prevPage" :disabled="currentPage === 1">
+            &#8592;
+          </button>
+          <span>Сторінка {{ currentPage }} з {{ totalPages }}</span>
+          <button @click="nextPage" :disabled="currentPage === totalPages">
+            &#8594;
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script>
+import axios from "axios";
+import VueCookies from "vue-cookies";
+
+export default {
+  data() {
+    return {
+      reviewBody: "",
+      comments: [],
+      rating: 1,
+      users: [],
+      currentPage: 1,
+      itemsPerPage: 5,
+    };
+  },
+  created() {
+    this.fetchComments();
+    this.fetchUsers();
+  },
+  methods: {
+    async fetchUsers() {
+      try {
+        const response = await axios.get("http://localhost:3000/users");
+        this.users = response.data;
+      } catch (error) {
+        console.error("Помилка отримання користувачів:", error);
+      }
+    },
+    fetchComments() {
+      const productId = 29102005;
+      axios
+        .get(`http://localhost:3000/comments/${productId}`)
+        .then((response) => {
+          this.comments = response.data;
+        })
+        .catch((error) => {
+          console.error("Помилка отримання коментарів:", error);
+        });
+    },
+    submitReview() {
+      if (!this.isLoggedIn) {
+        alert("Щоб написати відгук, зареєструйтесь будь ласка.");
+        return;
+      }
+
+      const reviewText = `${this.rating} ${this.reviewBody}`;
+      if (reviewText.trim() === "") {
+        console.error("Текст відгуку порожній");
+        return;
+      }
+
+      const reviewData = {
+        body: reviewText,
+        user_id: VueCookies.get("userToken"),
+        parent_id: 29102005,
+      };
+
+      axios
+        .post("http://localhost:3000/add_comment", reviewData)
+        .then((response) => {
+          this.reviewBody = "";
+          this.rating = 1;
+          this.fetchComments();
+        })
+        .catch((error) => {
+          console.error("Помилка відправлення відгуку:", error);
+        });
+    },
+    removeRatingFromComment(comment) {
+      return comment.split(" ").slice(1).join(" ");
+    },
+    getUsername(userId) {
+      const user = this.users.find((user) => user.id === userId);
+      return user ? user.login : "Невідомий користувач";
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    },
+  },
+  computed: {
+    isLoggedIn() {
+      const username = VueCookies.get("username");
+      return !!username;
+    },
+    reversedComments() {
+      return this.comments.slice().reverse();
+    },
+    paginatedComments() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.reversedComments.slice(startIndex, endIndex);
+    },
+    totalPages() {
+      return Math.ceil(this.comments.length / this.itemsPerPage);
+    },
+    averageRating() {
+      if (this.comments.length === 0) {
+        return 0;
+      }
+      const totalRating = this.comments.reduce((sum, comment) => {
+        const rating = parseInt(comment.body.split(" ")[0]);
+        return sum + rating;
+      }, 0);
+      const average = totalRating / this.comments.length;
+      return Math.round(average * 10) / 10; 
+    },
+  },
+};
+</script>
+
+
+<style scoped>
+.review-page {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.review-section,
+.comments-section {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.review-section h2,
+.comments-section h2 {
+  margin-top: 0;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+  resize: none;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.rating {
+  display: flex;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.rating .star {
+  color: #ddd;
+}
+
+.rating .star.filled {
+  color: #ffd700;
+}
+
+.comment {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comment .main-comment-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment .user-name {
+  font-weight: bold;
+}
+
+.comment .rating-wrapper .ratingSee {
+  color: #ffd700;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination button {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+</style>

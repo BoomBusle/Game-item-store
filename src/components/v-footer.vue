@@ -13,27 +13,27 @@
       <div class="contact">
         <p>Напишіть нам</p>
         <nav class="massenger">
-          <router-link to="/instagram">
+          <a href="https://www.instagram.com/boombusle?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">
             <img src="../assets/image/instagram.webp" />
-          </router-link>
-          <router-link to="/facebook">
+          </a>
+          <a href="https://www.facebook.com/profile.php?id=100016121449134&locale=uk_UA">
             <img src="../assets/image/facebook.png" />
-          </router-link>
-          <router-link to="/twitter">
+          </a>
+          <a href="https://x.com/BoomBusle">
             <img src="../assets/image/twitter.png" />
-          </router-link>
-          <router-link to="/telegram">
+          </a>
+          <a href="https://t.me/BoomBusle">
             <img src="../assets/image/telegram.png" />
-          </router-link>
+          </a>
         </nav>
       </div>
       <div class="category">
         <p>Каталог</p>
         <nav>
-          <router-link to="/steam">Steam</router-link>
-          <router-link to="/EA_store">EA store</router-link>
-          <router-link to="/uplay">Uplay</router-link>
-          <router-link to="/Other">Інше</router-link>
+          <a href="https://store.steampowered.com/">Steam</a>
+          <a href="https://www.ea.com/">EA store</a>
+          <a href="https://www.ubisoft.com/">Uplay</a>
+          <a href="https://www.gog.com">GOG</a>
         </nav>
       </div>
     </footer>
