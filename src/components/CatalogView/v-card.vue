@@ -196,7 +196,7 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   cursor: pointer;
-  max-width: 22%;
+  max-width: 220px;
   transition: background-color 0.3s;
   font-family: "Speed Rush" !important;
   transition: transform 0.3s;
@@ -235,6 +235,7 @@ export default {
   text-align: center;
   font-family: "Speed Rush" !important;
   .card-name{
+    text-align: start;
     font-weight: bold;
   }
   .card-body{

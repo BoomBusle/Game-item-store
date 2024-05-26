@@ -195,8 +195,8 @@ export default {
   }
   .filter-button {
     background-color: transparent;
-    border: 1px solid #ffc400;
-    color: #ffc400;
+    border: 1px solid #4caf50;
+    color: #4caf50;
     padding: 10px 20px;
     border-radius: 10px;
     transition: background-color 0.3s, color 0.3s;
@@ -205,12 +205,12 @@ export default {
   }
 
   .filter-button:hover {
-    background-color: #ffc400;
+    background-color: #4caf50;
     color: white;
   }
 
   .filter-button:active {
-    background-color: #e0a800;
+    background-color: #38833a;
   }
 }
 .v-main-wrapper {

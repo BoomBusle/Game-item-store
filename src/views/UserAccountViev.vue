@@ -1,14 +1,13 @@
 <template>
   <div class="user-account-view">
     <div class="user-info">
-      <h2>Мій обліковий запис</h2>
-      <p><strong>Ім'я користувача:</strong> <span v-if="!editMode">{{ userData.login }}</span></p>
+      <p><strong>Ім'я користувача : </strong><span v-if="!editMode">{{ userData.login }}</span></p>
       <input v-model="editedUserData.login" type="text" v-if="editMode && !saving" placeholder="Введіть нове ім'я користувача">
       <p><strong>Пошта:</strong> {{ userData.email }}</p>
       <button @click="toggleEditMode">{{ editMode ? 'Зберегти' : 'Редагувати' }}</button>
     </div>
     <div class="user-orders">
-      <h3>Мої замовлення</h3>
+      <h3 >Мої замовлення</h3>
       <table>
         <thead>
           <tr>
@@ -114,45 +113,34 @@ export default {
 
 <style scoped>
 .user-account-view {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: #f9f9f9;
 }
 
 .user-info {
   display: flex;
-  flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
+  flex-direction: column;
   margin-bottom: 20px;
   font-weight: bold;
 }
 
 button {
   padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
+  background-color: #4CAF50;
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #555;
-}
-
-.user-avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-bottom: 10px;
+  background-color: #45a049;
 }
 
 table {
@@ -162,13 +150,21 @@ table {
 }
 
 th, td {
-  border: 1px solid #ddd;
-  padding: 8px;
+  padding: 12px;
   text-align: left;
 }
 
 th {
+  background-color: #5e5e5e;
+  color: white;
+}
+
+tr:nth-child(even) {
   background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #ddd;
 }
 
 @media (max-width: 600px) {
@@ -189,14 +185,16 @@ th {
   .user-orders table tr {
     display: block;
     margin-bottom: 10px;
-    width: 90vw;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
 
   .user-orders table td {
     display: block;
-    text-align: right;
+    text-align: left;
     position: relative;
     padding-left: 50%;
+    border-bottom: 1px solid #ddd;
   }
 
   .user-orders table td::before {
@@ -204,9 +202,10 @@ th {
     position: absolute;
     left: 0;
     width: 50%;
-    padding-left: 10px;
+    padding-left: 12px;
     font-weight: bold;
     text-align: left;
   }
 }
+
 </style>

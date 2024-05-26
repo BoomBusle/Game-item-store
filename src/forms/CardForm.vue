@@ -331,6 +331,7 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Jura:wght@300..700&display=swap");
 
 .form-input {
+  padding: 10px;
   position: relative;
   width: 70%;
 }
@@ -446,6 +447,7 @@ button {
   flex-direction: column;
   font-weight: bold;
   gap: 10px;
+  text-align: start;
   width: -webkit-fill-available;
   padding: 20px;
   p {
