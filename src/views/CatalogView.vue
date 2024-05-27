@@ -149,110 +149,104 @@ export default {
 <style lang="scss" scoped>
 .filter-wrapper {
   display: flex;
-  margin-left: 2vw;
-  margin-top: 2vw;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  flex-direction: column;
+  margin: 2vw 0vw 2vw 2vw;
   padding: 2vw;
   border-radius: 10px;
-  gap: 10px;
-  * {
-    width: -webkit-fill-available;
+  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+  background: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: #f1f1f1;
   }
-  input {
-    padding: 5px 7px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    &:focus {
-      border: none;
-    }
-    &:active {
-      border: 1px solid #ccc;
-    }
-    &:focus-visible {
-      border: none;
-    }
-  }
-  .separator {
-    width: 100%;
-    height: 2px;
-    background-color: gray;
-  }
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
-    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  
   label {
     font-weight: bold;
-    margin-right: 7vw;
+    margin-bottom: 0.5rem;
+    color: #333;
   }
-  .slider {
-    width: 10vw;
-    @media (max-width: 768px) {
-      width: 30vw;
+  
+  input,
+  select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+    
+    &:focus {
+      border-color: #4caf50;
+      outline: none;
     }
   }
+  
+  .separator {
+    width: 100%;
+    height: 1px;
+    background-color: #ddd;
+    margin: 1rem 0;
+  }
+  
+  .slider {
+    width: 100%;
+  }
+  
   .filter-button {
-    background-color: transparent;
-    border: 1px solid #4caf50;
-    color: #4caf50;
-    padding: 10px 20px;
-    border-radius: 10px;
-    transition: background-color 0.3s, color 0.3s;
+    background-color: #4caf50;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-  }
-
-  .filter-button:hover {
-    background-color: #4caf50;
-    color: white;
-  }
-
-  .filter-button:active {
-    background-color: #38833a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    
+    &:hover {
+      background-color: #45a049;
+    }
+    
+    &:active {
+      background-color: #388e3c;
+      transform: scale(0.98);
+    }
   }
 }
+
 .v-main-wrapper {
-  padding-bottom: 5%;
-  background-color: #fff;
+  padding: 1%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: flex-start;
   flex-direction: row;
   gap: 5vw;
-  height: auto;
+  background-color: #fff;
   min-height: 100vh;
+
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
   }
 }
+
 .v-second-wrapper {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: flex-start;
-  flex-direction: column;
   width: 75vw;
-  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 2vw;
-  h2 {
-    text-align: start;
-    margin-bottom: 1vw;
-    margin-top: 1vw;
-    font-weight: bold;
-  }
+  margin-left: -10vw;
 }
+
 .v-card-wrapper {
   display: flex;
-  align-items: center;
-  flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
-  max-width: 75vw;
-  width: 100%;
   gap: 5vw;
-  @media (max-width: 768px) {
-    justify-content: center;
-  }
+  justify-content: center;
+  width: 75vw;
 }
 </style>

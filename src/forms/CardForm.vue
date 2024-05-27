@@ -330,6 +330,24 @@ export default {
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Jura:wght@300..700&display=swap");
 
+.add-to-cart-button {
+  background-color: transparent;
+  border: 1px solid #4caf50;
+  color: #4caf50;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+  font-weight: bold;
+  &:hover {
+    background-color: #4caf50;
+    color: white;
+  }
+  &:active {
+    background-color: #38833a;
+  }
+}
+
 .form-input {
   padding: 10px;
   position: relative;
@@ -467,8 +485,8 @@ button {
   border-radius: 20px 20px 0 0;
   box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px,
     rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
-    justify-content: center;
-    align-items: center;
+  justify-content: center;
+  align-items: center;
   .review-section {
     // max-width: 50%;
     width: -webkit-fill-available;

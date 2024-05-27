@@ -51,7 +51,6 @@ export default {
     },
     async placeOrder() {
       try {
-        // Перевірка та оновлення product_user_info якщо воно порожнє
         for (let item of this.cart) {
           if (!item.product_user_info) {
             const credentials = await this.fetchAndDeleteProductCredentials(item.product_id);
@@ -152,6 +151,7 @@ h1{
   background-color: #fff;
   margin: auto;
   padding: 20px;
+  height: 100vh;
 }
 
 .cart-items {

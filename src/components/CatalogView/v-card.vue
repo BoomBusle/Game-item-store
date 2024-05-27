@@ -216,7 +216,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    
     p{
       font-weight: bold;
       width: 50%;
@@ -228,6 +227,7 @@ export default {
   width: 100%;
   padding: 10px;
   display: flex;
+  height: 94px;
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
