@@ -157,45 +157,32 @@ export default {
         .catch((error) => {
           console.error("Error updating cart:", error);
         });
+    },
+    cartLength(){
+      if (this.$cookies.isKey("userToken")) {
+      this.isLoggedIn = true;
+      this.username = this.$cookies.get("username");
+      const userId = this.$cookies.get("userToken");
+      axios
+        .get(`http://localhost:3000/user_cart/${userId}`)
+        .then((response) => {
+          if (response.data && response.data.length > 0) {
+            this.cartItems = response.data;
+          } else {
+            console.error("Invalid response format:", response.data);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching cart items:", error);
+        });
+    }
     }
   },
   mounted() {
-    if (this.$cookies.isKey("userToken")) {
-      this.isLoggedIn = true;
-      this.username = this.$cookies.get("username");
-      const userId = this.$cookies.get("userToken");
-      axios
-        .get(`http://localhost:3000/user_cart/${userId}`)
-        .then((response) => {
-          if (response.data && response.data.length > 0) {
-            this.cartItems = response.data;
-          } else {
-            console.error("Invalid response format:", response.data);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching cart items:", error);
-        });
-    }
+    this.cartLength();
   },
   updated() {
-    if (this.$cookies.isKey("userToken")) {
-      this.isLoggedIn = true;
-      this.username = this.$cookies.get("username");
-      const userId = this.$cookies.get("userToken");
-      axios
-        .get(`http://localhost:3000/user_cart/${userId}`)
-        .then((response) => {
-          if (response.data && response.data.length > 0) {
-            this.cartItems = response.data;
-          } else {
-            console.error("Invalid response format:", response.data);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching cart items:", error);
-        });
-    }
+    this.cartLength();
   }
 };
 </script>
