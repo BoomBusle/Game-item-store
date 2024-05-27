@@ -371,7 +371,7 @@ export default {
 
 .form-input label {
   position: absolute;
-  left: 10px;
+  left: 15px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 0.8rem;
@@ -416,7 +416,6 @@ button {
   z-index: 100;
   background: #fff;
   min-height: 50vh;
-  // background-color: #bebebe;
   font-family: "Jura", sans-serif;
   display: flex;
   align-items: center;
@@ -428,15 +427,14 @@ button {
   box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px,
     rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px,
     rgba(0, 0, 0, 0.09) 0px 32px 16px;
-  // border-radius: 10px;
-  // -webkit-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  // -moz-box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
-  // box-shadow: -10px 10px 0px 0px rgba(110, 110, 110, 0.7);
 }
 .product-details img {
   max-height: 30vh;
   width: auto;
   filter: drop-shadow(0 0 0.75rem);
+  @media (max-width: 768px) {
+    max-height: 20vh;
+  }
 }
 .img-wrapper {
   display: flex;

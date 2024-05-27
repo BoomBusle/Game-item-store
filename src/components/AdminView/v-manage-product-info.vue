@@ -112,6 +112,38 @@
   </script>
   
   <style scoped>
+  .product-form{
+  display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1vw;
+
+  input,
+  select {
+    display: flex;
+      align-items: center;
+      justify-content: center;
+    width: 30%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-right: 1vw;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+    
+    &:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+    @media (max-width: 600px) {
+      width: 60%;
+    }
+  }
+  @media (max-width: 600px) {
+      flex-direction: column;
+    }
+}
   .addProductBtn {
     padding: 8px 16px;
     border: none;

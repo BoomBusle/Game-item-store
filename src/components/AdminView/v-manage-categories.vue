@@ -1,8 +1,9 @@
 <template>
   <div class="manage-categories">
-    <input type="text" v-model="newCategoryName" placeholder="Назва категорії">
+    <div class="add-category-wrapper">
+      <input type="text" v-model="newCategoryName" placeholder="Назва категорії">
     <button @click="addCategory">Додати категорію</button>
-
+    </div>
     <table class="category-table">
       <thead>
         <tr>
@@ -53,6 +54,38 @@ export default {
 };
 </script>
 <style scoped>
+.add-category-wrapper{
+  display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1vw;
+
+  input,
+  select {
+    display: flex;
+      align-items: center;
+      justify-content: center;
+    width: 30%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-right: 1vw;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+    
+    &:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+    @media (max-width: 600px) {
+      width: 60%;
+    }
+  }
+  @media (max-width: 600px) {
+      flex-direction: column;
+    }
+}
 .manage-categories {
   margin-top: 20px;
 }

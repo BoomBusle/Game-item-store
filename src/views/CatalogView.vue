@@ -7,12 +7,11 @@
           type="text"
           id="name"
           v-model.trim="selectedName"
-          @change="applyFilters"
           placeholder="Назва товару"
         />
         <div class="separator"></div>
         <label for="category">Категорія:</label>
-        <select id="category" v-model="selectedCategory" @change="applyFilters">
+        <select id="category" v-model="selectedCategory">
           <option value="">Усі категорії</option>
           <option
             v-for="category in categories"
@@ -29,7 +28,6 @@
             v-model="priceRange"
             :min="minPrice"
             :max="maxPrice"
-            @change="applyFilters"
           ></vue-slider>
         </div>
         <div class="separator"></div>
@@ -78,7 +76,8 @@ export default {
       selectedCategory: "",
       minPrice: 0,
       maxPrice: 0,
-      priceRange: [0, 0]
+      priceRange: [0, 0],
+      filteredProducts: []
     };
   },
   created() {
@@ -92,6 +91,7 @@ export default {
         .then((response) => {
           this.products = response.data;
           this.setPriceRange();
+          this.filteredProducts = this.products;
         })
         .catch((error) => console.error("Error fetching products:", error));
     },
@@ -138,18 +138,13 @@ export default {
       this.priceRange = [this.minPrice, this.maxPrice];
     }
   },
-  computed: {
-    filteredProducts() {
-      return this.filterProducts();
-    }
-  }
 };
 </script>
 
 <style lang="scss" scoped>
 .filter-wrapper {
   display: flex;
-  margin: 2vw 0vw 2vw 2vw;
+  margin: 2vw 0 2vw 2vw;
   padding: 2vw;
   border-radius: 10px;
   gap: 20px;
@@ -240,6 +235,27 @@ export default {
   align-items: center;
   margin-top: 2vw;
   margin-left: -10vw;
+  @media (max-width: 768px) {
+    margin-left: 0vw;
+  }
+}
+
+.vue-slider-process {
+  background-color: #4caf50;
+  border-radius: 15px;
+}
+
+.vue-slider-dot-tooltip-inner {
+    font-size: 14px;
+    white-space: nowrap;
+    padding: 2px 5px;
+    min-width: 20px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+    border-color: #4caf50;
+    background-color: #4caf50;
+    box-sizing: content-box;
 }
 
 .v-card-wrapper {
@@ -248,5 +264,10 @@ export default {
   gap: 5vw;
   justify-content: center;
   width: 75vw;
+  @media (max-width: 768px) {
+    width: 100vw;
+    align-items: center;
+  }
 }
+
 </style>

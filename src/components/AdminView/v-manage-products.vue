@@ -1,6 +1,7 @@
 <template>
   <div class="manage-products">
-    <input type="text" v-model="newProductName" placeholder="Назва" />
+    <div class="add-product-wrapper">
+      <input type="text" v-model="newProductName" placeholder="Назва" />
     <input type="text" v-model="newProductPrice" placeholder="Ціна" />
     <input type="text" v-model="newProductDescription" placeholder="Опис" />
     <select v-model="newProductBody" class="category-select">
@@ -16,6 +17,7 @@
     <input type="file" @change="onFileChange" placeholder="Фото" />
     <input type="text" v-model="newProductEnable" placeholder="Enable" />
     <button class="addProductBtn" @click="addProduct">Додати товар</button>
+    </div>
     <ul class="product-list">
       <li
         v-for="(product, index) in products"
@@ -206,8 +208,35 @@ export default {
 .manage-products {
   margin-top: 20px;
 }
+.add-product-wrapper{
+  display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+  input,
+  select {
+    width: 10%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-right: 1vw;
+    margin-bottom: 1vw;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+    
+    &:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+    @media (max-width: 600px) {
+      width: 60%;
+    }
+  }
+  @media (max-width: 600px) {
+      flex-direction: column;
+    }
+}
 
-.manage-products input,
 .manage-products button {
   margin: 5px;
 }
