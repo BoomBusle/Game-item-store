@@ -341,11 +341,35 @@ export default {
 }
 
 .edit-modal {
+  border-radius: 10px;
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 1001;
+  font-weight: bold;
+  input,
+  select {
+    width: 15%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-right: 1vw;
+    margin-bottom: 1vw;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+    
+    &:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+    @media (max-width: 600px) {
+      width: 60%;
+    }
   position: relative;
+  } 
+  h2{
+    margin-bottom: 1vw;
+  }
 }
 
 .saveProductBtn,
